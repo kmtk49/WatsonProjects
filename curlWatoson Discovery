@@ -1,0 +1,76 @@
+◆Watson DiscoveryのWebアプリを下記参考に作成(が一行目から通らない）
+https://qiita.com/y-some/items/e0b121dc1bddf2e0f506
+
+◆Discovery API入門を参考にすすめる
+https://cloud.ibm.com/docs/services/discovery?topic=discovery-gs-api#gs-api
+
+◆Curlの設定　"version=2018-12-12"
+ディスカバリー-mk
+api key OrZIvQ1FB-OSmnQuoh5Z7RJhzYbyp8BUOt4Q3JHVCXc6
+URL https://gateway.watsonplatform.net/discovery/api
+enviroment id c6982a9b-80d3-4c09-9505-6503613205a2
+configration id 824b059d-9318-480e-837c-a55ff7240cbe
+collection id 8ba006c3-4baa-4905-a114-d2c20097fef4
+
+◆次のコマンドを発行して、my-first-environment という名前の環境を作成します。 {apikey} と {url} を、前にコピーした API 鍵と URL に置き換えます。
+curl -X POST -u "apikey:{apikey}" -H "Content-Type: application/json" -d "{\"name\":\"my-first-environment\", \"description\":\"exploring environments\"}" "{url}/v1/environments?version=2018-12-03"
+
+curl -X POST -u "apikey:OrZIvQ1FB-OSmnQuoh5Z7RJhzYbyp8BUOt4Q3JHVCXc6" -H "Content-Type: application/json" -d "{\"name\":\"my-first-environment\", \"description\":\"exploring environments\"}" "https://gateway.watsonplatform.net/discovery/api/v1/environments?version=2018-12-12"
+
+◆GET /v1/environments/{environment_id} メソッドへの呼び出しを発行して、環境の状況を取得します。 {apikey}、{url}、および {environment_id} は、ご自身の情報に置き換えてください
+curl -u "apikey:OrZIvQ1FB-OSmnQuoh5Z7RJhzYbyp8BUOt4Q3JHVCXc6" "https://gateway.watsonplatform.net/discovery/api/v1/environments/c6982a9b-80d3-4c09-9505-6503613205a2?version=2018-12-12"
+
+◆ステップ 2: コレクションの作成
+これで環境の準備が整ったので、コレクションを作成することができます。 コレクションとは、環境内で資料を保管する箱のようなものです
+まず、デフォルト構成の ID が必要です。 デフォルトの configuration_id を見つけるには、GET /v1/environments/{environment_id}/configurations メソッドを使用します。 {apikey}、{url}、および {environment_id} は、ご自身の情報に置き換えてください。
+  curl -u "apikey:{apikey}" "{url}/v1/environments/{environment_id}/configurations?version=2018-12-03"
+
+curl -u "apikey:OrZIvQ1FB-OSmnQuoh5Z7RJhzYbyp8BUOt4Q3JHVCXc6" "https://gateway.watsonplatform.net/discovery/api/v1/environments/c6982a9b-80d3-4c09-9505-6503613205a2/configurations?version=2018-12-12"
+
+◆POST /v1/environments/{environment_id}/collections メソッドを使用して、my-first-collection と呼ばれるコレクションを作成します。 {apikey}、{url}、{environment_id} および {configuration_id} は、ご自身の情報に置き換えてください。◆language jaに変更◆
+
+curl -X POST -u "apikey:{apikey}" -H "Content-Type: application/json" -d "{\"name\": \"my-first-collection\", \"description\": \"exploring collections\", \"configuration_id\":\"{configuration_id}\" , \"language": \"en_us\"}" "{url}/v1/environments/{environment_id}/collections?version=2018-12-03"
+
+curl -X POST -u "apikey:OrZIvQ1FB-OSmnQuoh5Z7RJhzYbyp8BUOt4Q3JHVCXc6" -H "Content-Type: application/json" -d "{\"name\": \"my-first-collection\", \"description\": \"exploring collections\", \"configuration_id\":\"824b059d-9318-480e-837c-a55ff7240cbe\" , \"language": \"ja\"}" "https://gateway.watsonplatform.net/discovery/api/v1/environments/c6982a9b-80d3-4c09-9505-6503613205a2/collections?version=2018-12-12"
+
+◆active の状況が表示されるまで、コレクションの状況を定期的に確認します。
+
+GET /v1/environments/{environment_id}/collections/{collection_id} メソッドへの呼び出しを発行して、コレクションの状況を取得します。 ここでも、{apikey}、{url}、{environment_id}、および {configuration_id} は、ご自身の情報に置き換えてください。
+
+curl -u "apikey:OrZIvQ1FB-OSmnQuoh5Z7RJhzYbyp8BUOt4Q3JHVCXc6" "https://gateway.watsonplatform.net/discovery/api/v1/environments/{environment_id}/collections/{collection_id}?version=2018-12-03"
+curl -u "apikey:{apikey}" "{url}/v1/environments/{environment_id}/collections/{collection_id}?version=2018-12-03"
+
+
+--------------------------------------------------------------------------------------------------------------------
+-◆◆- environmentの一覧を取得
+curl -u "{ユーザーID}":"{パスワード}" "https://gateway.watsonplatform.net/discovery/api/v1/environments?version=2017-11-07"
+
+curl -u "kimurat:"nishi053" "https://gateway.watsonplatform.net/discovery/api/v1/environments?version=2018-12-12"
+
+
+-- environment_idを指定して日本語にカスタムしたconfiguration_idを取得
+curl -u "{ユーザーID}":"{パスワード}" "https://gateway.watsonplatform.net/discovery/api/v1/environments/{上で取得したenvironment_id}/configurations?version=2017-11-07"
+
+-- 日本語にカスタムしconfiguration_idを指定して日本語のcollectionを作成
+curl -X POST -u "{ユーザーID}":"{パスワード}" -H "Content-Type: application/json" -d '{ "name": "{作成するコレクション名}",  "description": "{作成するコレクションの説明}",  "configuration_id": "{上で取得したconfiguration_id}", "language": "ja"}' "https://gateway.watsonplatform.net/discovery/api/v1/environments/{上で取得したenvironment_id}/collections?version=2017-11-07"
+
+POST /v1/environments/{environment_id}/collections メソッドを使用して、my-first-collection と呼ばれるコレクションを作成します。 {apikey}、{url}、{environment_id} および {configuration_id} は、ご自身の情報に置き換えてください。
+
+
+◆◆◆１下記参考記事◆◆◆
+API Keyによる日本語データコレクション作成の手順
+https://qiita.com/kolinz/items/e297a4cf292408a18cc3#_reference-4583051d6e508f763abe
+
+environment_idを取得するコマンドを実行
+curl -u "apikey":"OrZIvQ1FB-OSmnQuoh5Z7RJhzYbyp8BUOt4Q3JHVCXc6" "https://gateway.watsonplatform.net/discovery/api/v1/environments?version=2018-12-12"
+
+4.configuration_idを発行するコマンドを実行
+コマンド実行
+curl -u "apikey":"OrZIvQ1FB-OSmnQuoh5Z7RJhzYbyp8BUOt4Q3JHVCXc6" "https://gateway.watsonplatform.net/discovery/api/v1/environments/c6982a9b-80d3-4c09-9505-6503613205a2/configurations?version=2018-12-12"
+
+
+5.日本語対応のデータコレクションを作成します。
+コマンド実行
+curl -X POST -u "apikey":"xxxxxxxxxxxx" -H "Content-Type: application/json" -d '{  "name": "jp_data",   "description": "My data collection",  "language": "ja" }' "http://gateway-syd.watsonplatform.net/discovery/api/v1/environments/xxxxx-yyyyy-1111-aaaaa-2222/collections?version=2018-03-05"
+
+
